@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.NoSuchElementException;
 
 public class ApplicationConfiguration {
 	private static ApplicationConfiguration instance = null;
 	private String databaseUrl;
 	private String databaseUsername;
 	private String databasePassword;
+	private String jwtSecret;
 
 	private static ApplicationConfiguration readFromFile() throws Exception {
 		var path = Path.of(ConfigurationUtility.getConfigurationFilepath());
@@ -20,6 +20,8 @@ public class ApplicationConfiguration {
 
 		if (config.getDatabaseUrl() == null)
 			throw new Exception("Configuration field `databaseUrl` is required.");
+
+
 
 		return config;
 	}
@@ -41,23 +43,15 @@ public class ApplicationConfiguration {
 		return databaseUrl;
 	}
 
-	public void setDatabaseUrl(String databaseUrl) {
-		this.databaseUrl = databaseUrl;
-	}
-
 	public String getDatabaseUsername() {
 		return databaseUsername;
-	}
-
-	public void setDatabaseUsername(String databaseUsername) {
-		this.databaseUsername = databaseUsername;
 	}
 
 	public String getDatabasePassword() {
 		return databasePassword;
 	}
 
-	public void setDatabasePassword(String databasePassword) {
-		this.databasePassword = databasePassword;
+	public String getJwtSecret() {
+		return jwtSecret;
 	}
 }

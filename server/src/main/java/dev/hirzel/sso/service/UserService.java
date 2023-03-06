@@ -1,5 +1,6 @@
 package dev.hirzel.sso.service;
 
+import dev.hirzel.sso.dto.UserDto;
 import dev.hirzel.sso.entity.User;
 import dev.hirzel.sso.repository.UserRepository;
 import org.hibernate.cfg.NotYetImplementedException;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -34,6 +36,13 @@ public class UserService {
 		return users.get(0);
 	}
 
+	public Optional<User> findUser(String username) {
+		var users = userRepository.findByUsername(username);
+		var user =  users.stream().findFirst();
+
+		return user;
+	}
+
 	public User getUser(long id) {
 		var user = userRepository.findById(id);
 
@@ -45,5 +54,12 @@ public class UserService {
 
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
+	}
+
+	public User createUser(UserDto dto) {
+		var user = new User(dto);
+		var savedUser = userRepository.save(user);
+
+		return savedUser;
 	}
 }

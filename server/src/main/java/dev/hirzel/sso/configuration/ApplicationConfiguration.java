@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.NoSuchElementException;
 
 public class ApplicationConfiguration {
 	private static ApplicationConfiguration instance = null;
@@ -16,6 +17,9 @@ public class ApplicationConfiguration {
 		var configText = Files.readString(path);
 		var mapper = new ObjectMapper();
 		var config = mapper.readValue(configText, ApplicationConfiguration.class);
+
+		if (config.getDatabaseUrl() == null)
+			throw new Exception("Configuration field `databaseUrl` is required.");
 
 		return config;
 	}

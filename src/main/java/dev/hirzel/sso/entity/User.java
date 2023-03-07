@@ -1,30 +1,23 @@
 package dev.hirzel.sso.entity;
 
-import dev.hirzel.sso.dto.UserDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.nio.charset.StandardCharsets;
 
 @Entity
 @Table(name = "users")
 public class User {
     public User() {}
 
-    public User(UserDto dto) {
-        var encoder = new BCryptPasswordEncoder();
-        var passwordHash = encoder
-                .encode(dto.password)
-                .getBytes(StandardCharsets.UTF_8);
-
-        this.username = dto.username;
+    public User(String username, String passwordHash, String firstName, String lastName)
+    {
+        this.username = username;
         this.passwordHash = passwordHash;
-        this.firstName = dto.firstName;
-        this.lastName = dto.lastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
+
     @Id
     @Column(name = "id")
     private long id;
@@ -39,7 +32,7 @@ public class User {
     private String username;
 
     @Column(name = "password_hash")
-    private byte[] passwordHash;
+    private String passwordHash;
 
     public long getId() {
         return id;
@@ -73,11 +66,11 @@ public class User {
         this.username = username;
     }
 
-    public byte[] getPasswordHash() {
+    public String getPasswordHash() {
         return passwordHash;
     }
 
-    public void setPasswordHash(byte[] passwordHash) {
+    public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
 }

@@ -1,9 +1,9 @@
 package dev.hirzel.sso.service;
 
-import dev.hirzel.sso.dto.UserDto;
 import dev.hirzel.sso.entity.User;
 import dev.hirzel.sso.repository.UserRepository;
 import org.hibernate.cfg.NotYetImplementedException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +13,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-	private final UserRepository userRepository;
-
-	public UserService(UserRepository userRepository)
-	{
-		this.userRepository = userRepository;
-	}
+	@Autowired
+	UserRepository userRepository;
 
 	public boolean authenticateUser(String username, String password) {
 		var encoder = new BCryptPasswordEncoder();
@@ -52,12 +48,13 @@ public class UserService {
 		return user.get();
 	}
 
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers()
+	{
 		return userRepository.findAll();
 	}
 
-	public User createUser(UserDto dto) {
-		var user = new User(dto);
+	public User createUser(User user)
+	{
 		var savedUser = userRepository.save(user);
 
 		return savedUser;

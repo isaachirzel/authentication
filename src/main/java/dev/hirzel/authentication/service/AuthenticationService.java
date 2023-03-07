@@ -1,14 +1,14 @@
-package dev.hirzel.sso.service;
+package dev.hirzel.authentication.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import dev.hirzel.sso.configuration.ApplicationConfiguration;
-import dev.hirzel.sso.dto.AuthenticationDto;
-import dev.hirzel.sso.entity.User;
-import dev.hirzel.sso.exception.AuthenticationException;
-import dev.hirzel.sso.exception.NullArgumentException;
-import dev.hirzel.sso.security.JwtClaim;
+import dev.hirzel.authentication.configuration.ApplicationConfiguration;
+import dev.hirzel.authentication.dto.AuthenticationDto;
+import dev.hirzel.authentication.entity.User;
+import dev.hirzel.authentication.exception.AuthenticationException;
+import dev.hirzel.authentication.exception.NullArgumentException;
+import dev.hirzel.authentication.security.JwtClaim;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +20,7 @@ import java.time.Instant;
 public class AuthenticationService
 {
 	private static final long MAX_JWT_AGE = 60 * 15; // 15 minutes
-	private static final String TOKEN_COOKIE_NAME = "sso_auth_token";
+	private static final String TOKEN_COOKIE_NAME = "hirzel_auth_token";
 	@Autowired
 	UserService userService;
 

@@ -1,4 +1,4 @@
-package dev.hirzel.sso.dto;
+package dev.hirzel.authentication.dto;
 
 public class AuthenticationDto
 {

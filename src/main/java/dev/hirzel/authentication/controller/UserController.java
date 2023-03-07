@@ -1,8 +1,8 @@
-package dev.hirzel.sso.controller;
+package dev.hirzel.authentication.controller;
 
-import dev.hirzel.sso.entity.User;
-import dev.hirzel.sso.service.AuthenticationService;
-import dev.hirzel.sso.service.UserService;
+import dev.hirzel.authentication.entity.User;
+import dev.hirzel.authentication.service.AuthenticationService;
+import dev.hirzel.authentication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

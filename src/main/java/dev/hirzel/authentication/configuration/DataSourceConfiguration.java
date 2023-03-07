@@ -1,4 +1,4 @@
-package dev.hirzel.sso.configuration;
+package dev.hirzel.authentication.configuration;
 
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;

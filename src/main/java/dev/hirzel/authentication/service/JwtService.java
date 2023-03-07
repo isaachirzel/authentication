@@ -1,4 +1,4 @@
-package dev.hirzel.sso.service;
+package dev.hirzel.authentication.service;
 
 import org.springframework.stereotype.Service;
 

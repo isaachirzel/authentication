@@ -1,4 +1,4 @@
-package dev.hirzel.sso.configuration;
+package dev.hirzel.authentication.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

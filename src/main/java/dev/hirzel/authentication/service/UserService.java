@@ -1,7 +1,7 @@
-package dev.hirzel.sso.service;
+package dev.hirzel.authentication.service;
 
-import dev.hirzel.sso.entity.User;
-import dev.hirzel.sso.repository.UserRepository;
+import dev.hirzel.authentication.entity.User;
+import dev.hirzel.authentication.repository.UserRepository;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

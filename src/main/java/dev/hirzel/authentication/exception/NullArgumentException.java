@@ -1,4 +1,4 @@
-package dev.hirzel.sso.exception;
+package dev.hirzel.authentication.exception;
 
 public class NullArgumentException extends Exception
 {

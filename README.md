@@ -1,2 +1,2 @@
-# sso
-SSO Application for unified authentication across microservices
+# Authentication Microservice
+Centralized authentication microservice for joining user accounts across apaplications

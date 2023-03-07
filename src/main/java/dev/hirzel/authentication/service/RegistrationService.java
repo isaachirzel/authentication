@@ -1,7 +1,7 @@
-package dev.hirzel.sso.service;
+package dev.hirzel.authentication.service;
 
-import dev.hirzel.sso.dto.RegistrationDto;
-import dev.hirzel.sso.entity.User;
+import dev.hirzel.authentication.dto.RegistrationDto;
+import dev.hirzel.authentication.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

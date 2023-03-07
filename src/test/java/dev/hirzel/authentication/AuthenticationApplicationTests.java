@@ -1,10 +1,10 @@
-package dev.hirzel.sso;
+package dev.hirzel.authentication;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SsoApplicationTests {
+class AuthenticationApplicationTests {
 
 	@Test
 	void contextLoads() {

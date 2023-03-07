@@ -1,6 +1,6 @@
-package dev.hirzel.sso.repository;
+package dev.hirzel.authentication.repository;
 
-import dev.hirzel.sso.entity.User;
+import dev.hirzel.authentication.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package dev.hirzel.sso.controller;
+package dev.hirzel.authentication.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

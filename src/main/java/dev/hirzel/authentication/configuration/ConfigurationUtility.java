@@ -1,11 +1,11 @@
-package dev.hirzel.sso.configuration;
+package dev.hirzel.authentication.configuration;
 
 import java.io.File;
 
 public class ConfigurationUtility {
 	public static String getConfigurationFilepath() throws Exception {
 		var rootDir = getOsSpecificConfigurationRootDir();
-		var path = rootDir + File.separator + "config.json";
+		var path = rootDir + File.separator + "authentication.json";
 
 		return path;
 	}
@@ -15,9 +15,9 @@ public class ConfigurationUtility {
 
 		switch (osName) {
 			case "linux":
-				return System.getProperty("user.home") + File.separator + ".config" + File.separator + "sso";
+				return System.getProperty("user.home") + File.separator + ".config" + File.separator + "hirzel";
 			case "windows":
-				return System.getenv("APPDATA") + File.separator + "sso";
+				return System.getenv("APPDATA") + File.separator + "hirzel";
 			default:
 				break;
 		}

@@ -1,8 +1,8 @@
-package dev.hirzel.sso.controller;
+package dev.hirzel.authentication.controller;
 
-import dev.hirzel.sso.dto.RegistrationDto;
-import dev.hirzel.sso.entity.User;
-import dev.hirzel.sso.service.RegistrationService;
+import dev.hirzel.authentication.dto.RegistrationDto;
+import dev.hirzel.authentication.entity.User;
+import dev.hirzel.authentication.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

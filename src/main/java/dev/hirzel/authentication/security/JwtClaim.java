@@ -1,4 +1,4 @@
-package dev.hirzel.sso.security;
+package dev.hirzel.authentication.security;
 
 public enum JwtClaim
 {

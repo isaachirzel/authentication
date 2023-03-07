@@ -1,4 +1,4 @@
-package dev.hirzel.sso.entity;
+package dev.hirzel.authentication.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

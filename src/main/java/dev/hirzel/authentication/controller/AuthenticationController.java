@@ -1,9 +1,9 @@
-package dev.hirzel.sso.controller;
+package dev.hirzel.authentication.controller;
 
-import dev.hirzel.sso.dto.AuthenticationDto;
-import dev.hirzel.sso.entity.User;
-import dev.hirzel.sso.repository.UserRepository;
-import dev.hirzel.sso.service.AuthenticationService;
+import dev.hirzel.authentication.dto.AuthenticationDto;
+import dev.hirzel.authentication.entity.User;
+import dev.hirzel.authentication.repository.UserRepository;
+import dev.hirzel.authentication.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

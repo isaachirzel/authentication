@@ -1,10 +1,10 @@
 package dev.hirzel.authentication.dto;
 
 public class RegistrationInfo {
-	public String username;
-	public String password;
-	public String firstName;
-	public String lastName;
+	private String username;
+	private String password;
+	private String firstName;
+	private String lastName;
 
 	public String getUsername()
 	{

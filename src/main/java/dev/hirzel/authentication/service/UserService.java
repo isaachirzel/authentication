@@ -2,6 +2,7 @@ package dev.hirzel.authentication.service;
 
 import dev.hirzel.authentication.entity.User;
 import dev.hirzel.authentication.repository.UserRepository;
+import jakarta.annotation.Nullable;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,25 +17,12 @@ public class UserService {
 	@Autowired
 	UserRepository userRepository;
 
-	public boolean authenticateUser(String username, String password) {
-		var encoder = new BCryptPasswordEncoder();
-		var hash = encoder.encode(password);
-		var user = userRepository.findByUsername(username);
-		throw new NotYetImplementedException();
-	}
-
-	public User getUser(String username) {
+	public @Nullable User findUser(String username) {
 		var users = userRepository.findByUsername(username);
-
-		if (users.isEmpty())
-			throw new NoSuchElementException("No user with username '" + username + "' exists.");
-
-		return users.get(0);
-	}
-
-	public Optional<User> findUser(String username) {
-		var users = userRepository.findByUsername(username);
-		var user =  users.stream().findFirst();
+		var optionalUser =  users.stream().findFirst();
+		var user = optionalUser.isEmpty()
+			? null
+			: optionalUser.get();
 
 		return user;
 	}

@@ -1,9 +1,12 @@
 package dev.hirzel.authentication.exception;
 
-public class NullArgumentException extends Exception
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class NullArgumentException extends ResponseStatusException
 {
 	public NullArgumentException(String argumentName)
 	{
-		super("Argument `" + argumentName +  "` must not be null.");
+		super(HttpStatus.BAD_REQUEST, "Argument `" + argumentName +  "` must not be null.");
 	}
 }

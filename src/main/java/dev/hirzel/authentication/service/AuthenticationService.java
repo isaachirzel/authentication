@@ -1,83 +1,65 @@
 package dev.hirzel.authentication.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import dev.hirzel.authentication.configuration.ApplicationConfiguration;
-import dev.hirzel.authentication.dto.AuthenticationDto;
+import dev.hirzel.authentication.dto.AuthenticationInfo;
+import dev.hirzel.authentication.dto.AuthenticationResult;
 import dev.hirzel.authentication.entity.User;
 import dev.hirzel.authentication.exception.AuthenticationException;
+import dev.hirzel.authentication.exception.InvalidSessionException;
 import dev.hirzel.authentication.exception.NullArgumentException;
-import dev.hirzel.authentication.security.JwtClaim;
-import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-
 @Service
 public class AuthenticationService
 {
-	private static final long MAX_JWT_AGE = 60 * 15; // 15 minutes
-	private static final String TOKEN_COOKIE_NAME = "hirzel_auth_token";
 	@Autowired
 	UserService userService;
+	@Autowired
+	SessionService sessionService;
 
-	public String createAuthenticationToken(User user) throws Exception
+	public AuthenticationResult authenticate(AuthenticationInfo info) throws Exception
 	{
-		var algorithm = getEncryptionAlgorithm();
-		var token = JWT.create()
-				.withClaim(JwtClaim.Subject.toString(), user.getId())
-				.withClaim(JwtClaim.IssuedAt.toString(), Instant.now().getEpochSecond())
-				.sign(algorithm);
+		if (info.getToken() == null)
+		{
+			var user = getAuthenticatedUser(info);
+			var session = sessionService.createSession(user);
+			var result = new AuthenticationResult(user, session);
 
-		return token;
+			return result;
+		}
+
+		var session = sessionService.getSession(info.getToken());
+		var user = userService.getUser(session.getUserId());
+
+		if (session.isValid())
+		{
+			if (session.getUserId() != user.getId())
+				throw new InvalidSessionException();
+		}
+		else if (!user.getUsername().equals(info.getUsername()) || !isPasswordCorrect(user, info.getPassword()))
+		{
+			throw new AuthenticationException();
+		}
+
+		session.refresh();
+
+		var result = new AuthenticationResult(user, session);
+
+		return result;
 	}
 
-	public User getUserFromToken(String token) throws Exception
+	public User getAuthenticatedUser(AuthenticationInfo info) throws AuthenticationException
 	{
-		var jwt = decodeToken(token);
-		var userIdClaim = jwt.getClaim(JwtClaim.Subject.toString());
-		var userId = userIdClaim.asLong();
-		var user = userService.getUser(userId);
-
-		return user;
-	}
-
-	public User getAuthenticatedUser(AuthenticationDto dto) throws Exception
-	{
-		if (dto.token != null)
-			return getUserFromToken(dto.token);
-
-		if (dto.username == null)
-			throw new NullArgumentException("username");
-
-		if (dto.password == null)
-			throw new NullArgumentException("password");
-
-		var optionalUser = userService.findUser(dto.username);
-
-		if (optionalUser.isEmpty())
+		if (info.getUsername() == null || info.getPassword() == null)
 			throw new AuthenticationException();
 
-		var user = optionalUser.get();
+		var user = userService.findUser(info.getUsername());
 
-		if (!isPasswordCorrect(user, dto.password))
+		if (user == null || !isPasswordCorrect(user, info.getPassword()))
 			throw new AuthenticationException();
 
 		return user;
-	}
-
-	private DecodedJWT decodeToken(String token) throws Exception
-	{
-		var algorithm = getEncryptionAlgorithm();
-		var verifier = JWT
-				.require(algorithm)
-				.build();
-		var jwt = verifier.verify(token);
-
-		return jwt;
 	}
 
 	public String hashPassword(String password)
@@ -94,34 +76,5 @@ public class AuthenticationService
 		var isCorrect = encoder.matches(password, user.getPasswordHash());
 
 		return isCorrect;
-	}
-
-	public Algorithm getEncryptionAlgorithm() throws Exception
-	{
-		var appConfig = ApplicationConfiguration.getInstance();
-		var algorithm = Algorithm.HMAC256(appConfig.getJwtSecret());
-
-		return algorithm;
-	}
-
-	public Cookie createTokenCookie(String token) {
-		var cookie = new Cookie(TOKEN_COOKIE_NAME, token);
-
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
-//		cookie.setPath()
-
-		return cookie;
-	}
-
-	private boolean isJwtValid(DecodedJWT jwt)
-	{
-		var iat = jwt.getClaim(JwtClaim.IssuedAt.toString());
-		var createdTime = iat.asLong();
-		var currentTime = Instant.now().getEpochSecond();
-		var age = currentTime - createdTime;
-		var isValid = age <= MAX_JWT_AGE;
-
-		return isValid;
 	}
 }

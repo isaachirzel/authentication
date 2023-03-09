@@ -1,37 +1,30 @@
 package dev.hirzel.authentication.controller;
 
-import dev.hirzel.authentication.dto.AuthenticationDto;
-import dev.hirzel.authentication.entity.User;
-import dev.hirzel.authentication.repository.UserRepository;
+import dev.hirzel.authentication.dto.AuthenticationInfo;
+import dev.hirzel.authentication.dto.AuthenticationResult;
+import dev.hirzel.authentication.exception.SessionExpirationException;
 import dev.hirzel.authentication.service.AuthenticationService;
+import dev.hirzel.authentication.service.SessionService;
+import dev.hirzel.authentication.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/authentication")
-public class AuthenticationController {
-	@Autowired
-	UserRepository userRepository;
+@RequestMapping("/authentication")
+public class AuthenticationController
+{
 	@Autowired
 	AuthenticationService authenticationService;
+	@Autowired
+	SessionService sessionService;
+	@Autowired
+	UserService userService;
 
 	@PostMapping
-	public User Index(HttpServletResponse response, @RequestBody AuthenticationDto dto) throws Exception
+	public AuthenticationResult Index(@RequestBody AuthenticationInfo info) throws Exception
 	{
-		var user = authenticationService.getAuthenticatedUser(dto);
-		var token = authenticationService.createAuthenticationToken(user);
-		var tokenCookie = authenticationService.createTokenCookie(token);
-
-		response.addCookie(tokenCookie);
-
-		return user;
-	}
-
-	@GetMapping("redirect")
-	public void Redirect(HttpServletResponse response) throws Exception
-	{
-		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.sendRedirect("https://google.com");
+		return authenticationService.authenticate(info);
 	}
 }

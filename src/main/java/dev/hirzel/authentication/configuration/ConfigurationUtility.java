@@ -5,7 +5,7 @@ import java.io.File;
 public class ConfigurationUtility {
 	public static String getConfigurationFilepath() throws Exception {
 		var rootDir = getOsSpecificConfigurationRootDir();
-		var path = rootDir + File.separator + "authentication.json";
+		var path = rootDir + File.separator + "config.json";
 
 		return path;
 	}
@@ -15,9 +15,9 @@ public class ConfigurationUtility {
 
 		switch (osName) {
 			case "linux":
-				return System.getProperty("user.home") + File.separator + ".config" + File.separator + "hirzel";
+				return System.getProperty("user.home") + ".config/hirzel/authentication";
 			case "windows":
-				return System.getenv("APPDATA") + File.separator + "hirzel";
+				return System.getenv("APPDATA") + "\\hirzel\\authentication";
 			default:
 				break;
 		}

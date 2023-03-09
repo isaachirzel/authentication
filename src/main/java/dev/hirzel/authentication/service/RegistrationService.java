@@ -3,7 +3,7 @@ package dev.hirzel.authentication.service;
 import dev.hirzel.authentication.dto.AuthenticationResult;
 import dev.hirzel.authentication.dto.RegistrationInfo;
 import dev.hirzel.authentication.entity.User;
-import dev.hirzel.authentication.exception.NullArgumentException;
+import dev.hirzel.authentication.exception.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +21,16 @@ public class RegistrationService
 	{
 		// TODO: Validate RegistrationDto
 		if (info.getUsername() == null)
-			throw new NullArgumentException("username");
+			throw new BadRequestException("Username is required.");
 
 		if (info.getPassword() == null)
-			throw new NullArgumentException("password");
+			throw new BadRequestException("Password is required.");
 
 		if (info.getFirstName() == null)
-			throw new NullArgumentException("firstName");
+			throw new BadRequestException("FirstName is required.");
 
 		if (info.getLastName() == null)
-			throw new NullArgumentException("lastName");
+			throw new BadRequestException("LastName is required.");
 
 		var passwordHash = authenticationService.hashPassword(info.getPassword());
 		var user = new User(info.getUsername(), passwordHash, info.getFirstName(), info.getLastName());

@@ -3,9 +3,8 @@ package dev.hirzel.authentication.service;
 import dev.hirzel.authentication.dto.AuthenticationInfo;
 import dev.hirzel.authentication.dto.AuthenticationResult;
 import dev.hirzel.authentication.entity.User;
-import dev.hirzel.authentication.exception.AuthenticationException;
-import dev.hirzel.authentication.exception.InvalidSessionException;
-import dev.hirzel.authentication.exception.NullArgumentException;
+import dev.hirzel.authentication.exception.UnauthorizedException;
+import dev.hirzel.authentication.exception.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,11 +34,14 @@ public class AuthenticationService
 		if (session.isValid())
 		{
 			if (session.getUserId() != user.getId())
-				throw new InvalidSessionException();
+				throw new UnauthorizedException("Session user does not match request user.");
 		}
-		else if (!user.getUsername().equals(info.getUsername()) || !isPasswordCorrect(user, info.getPassword()))
+		else if (!user.getUsername().equals(info.getUsername()))
 		{
-			throw new AuthenticationException();
+			throw new UnauthorizedException("Username is incorrect.");
+		} else if (!isPasswordCorrect(user, info.getPassword()))
+		{
+			throw new UnauthorizedException("Password is incorrect.");
 		}
 
 		session.refresh();
@@ -49,15 +51,21 @@ public class AuthenticationService
 		return result;
 	}
 
-	public User getAuthenticatedUser(AuthenticationInfo info) throws AuthenticationException
+	public User getAuthenticatedUser(AuthenticationInfo info) throws UnauthorizedException
 	{
-		if (info.getUsername() == null || info.getPassword() == null)
-			throw new AuthenticationException();
+		if (info.getUsername() == null)
+			throw new BadRequestException("Username is required.");
+
+		if (info.getPassword() == null)
+			throw new BadRequestException("Password is required.");
 
 		var user = userService.findUser(info.getUsername());
 
-		if (user == null || !isPasswordCorrect(user, info.getPassword()))
-			throw new AuthenticationException();
+		if (user == null)
+			throw new UnauthorizedException("No user with username `" + info.getUsername()  + "` exists.");
+
+		if (!isPasswordCorrect(user, info.getPassword()))
+			throw new UnauthorizedException("Password is incorrect.");
 
 		return user;
 	}

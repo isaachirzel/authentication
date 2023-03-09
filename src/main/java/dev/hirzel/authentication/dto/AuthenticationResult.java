@@ -5,12 +5,20 @@ import dev.hirzel.authentication.security.Session;
 
 public class AuthenticationResult
 {
-	private User user;
 	private String token;
+	private UserResult user;
 
 	public AuthenticationResult(User user, Session session)
 	{
-		this.user = user;
 		this.token = session.getToken();
+		this.user = new UserResult(user);
+	}
+
+	public UserResult getUser() {
+		return user;
+	}
+
+	public String getToken() {
+		return token;
 	}
 }

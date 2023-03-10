@@ -1,10 +1,9 @@
 package dev.hirzel.authentication.service;
 
 import dev.hirzel.authentication.entity.User;
+import dev.hirzel.authentication.exception.UnauthorizedException;
 import dev.hirzel.authentication.security.Session;
 import jakarta.annotation.Nonnull;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +17,12 @@ public class SessionService
 	/**
 	 * @returns Current session or null is not found
 	 */
-	public @Nonnull Session getSession(String token) throws AuthenticationException
+	public @Nonnull Session getSession(String token) throws UnauthorizedException
 	{
 		var session = sessions.get(token);
 
 		if (session == null)
-			throw new AuthenticationException("Token is invalid.");
+			throw new UnauthorizedException("Token is invalid.");
 
 		return session;
 	}

@@ -15,7 +15,7 @@ public class ConfigurationUtility {
 
 		switch (osName) {
 			case "linux":
-				return System.getProperty("user.home") + ".config/hirzel/authentication";
+				return System.getProperty("user.home") + "/.config/hirzel/authentication";
 			case "windows":
 				return System.getenv("APPDATA") + "\\hirzel\\authentication";
 			default:

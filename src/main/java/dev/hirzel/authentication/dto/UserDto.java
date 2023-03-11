@@ -2,14 +2,14 @@ package dev.hirzel.authentication.dto;
 
 import dev.hirzel.authentication.entity.User;
 
-public class UserResult
+public class UserDto
 {
 	private long id;
 	private String username;
 	private String firstName;
 	private String lastName;
 
-	public UserResult(User user)
+	public UserDto(User user)
 	{
 		this.id = user.getId();
 		this.username = user.getUsername();

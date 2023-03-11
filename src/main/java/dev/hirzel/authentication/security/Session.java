@@ -59,4 +59,9 @@ public class Session
 	{
 		return this.expirationTime > Instant.now().getEpochSecond();
 	}
+
+	public boolean isExpired()
+	{
+		return !isValid();
+	}
 }

@@ -1,10 +1,11 @@
 package dev.hirzel.authentication.service;
 
-import dev.hirzel.authentication.dto.AuthenticationInfo;
-import dev.hirzel.authentication.dto.AuthenticationResult;
+import dev.hirzel.authentication.dto.AuthenticationDto;
+import dev.hirzel.authentication.dto.UserDto;
 import dev.hirzel.authentication.entity.User;
 import dev.hirzel.authentication.exception.UnauthorizedException;
 import dev.hirzel.authentication.exception.BadRequestException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,41 +18,19 @@ public class AuthenticationService
 	@Autowired
 	SessionService sessionService;
 
-	public AuthenticationResult authenticate(AuthenticationInfo info) throws Exception
+	public UserDto authenticate(AuthenticationDto info, HttpServletResponse response) throws Exception
 	{
-		if (info.getToken() == null)
-		{
-			var user = getAuthenticatedUser(info);
-			var session = sessionService.createSession(user);
-			var result = new AuthenticationResult(user, session);
+		var user = getAuthenticatedUser(info);
+		var session = sessionService.createSession(user);
+		var cookie = sessionService.createSessionCookie(session);
+		var dto = new UserDto(user);
 
-			return result;
-		}
+		response.addCookie(cookie);
 
-		var session = sessionService.getSession(info.getToken());
-		var user = userService.getUser(session.getUserId());
-
-		if (session.isValid())
-		{
-			if (session.getUserId() != user.getId())
-				throw new UnauthorizedException("Session user does not match request user.");
-		}
-		else if (!user.getUsername().equals(info.getUsername()))
-		{
-			throw new UnauthorizedException("Username is incorrect.");
-		} else if (!isPasswordCorrect(user, info.getPassword()))
-		{
-			throw new UnauthorizedException("Password is incorrect.");
-		}
-
-		session.refresh();
-
-		var result = new AuthenticationResult(user, session);
-
-		return result;
+		return dto;
 	}
 
-	public User getAuthenticatedUser(AuthenticationInfo info) throws UnauthorizedException
+	public User getAuthenticatedUser(AuthenticationDto info) throws UnauthorizedException
 	{
 		if (info.getUsername() == null)
 			throw new BadRequestException("Username is required.");

@@ -1,10 +1,9 @@
 package dev.hirzel.authentication.dto;
 
-public class RegistrationInfo {
+public class AuthenticationDto
+{
 	private String username;
 	private String password;
-	private String firstName;
-	private String lastName;
 
 	public String getUsername()
 	{
@@ -14,15 +13,5 @@ public class RegistrationInfo {
 	public String getPassword()
 	{
 		return password;
-	}
-
-	public String getFirstName()
-	{
-		return firstName;
-	}
-
-	public String getLastName()
-	{
-		return lastName;
 	}
 }

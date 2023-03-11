@@ -1,9 +1,10 @@
 package dev.hirzel.authentication.service;
 
-import dev.hirzel.authentication.dto.AuthenticationResult;
-import dev.hirzel.authentication.dto.RegistrationInfo;
+import dev.hirzel.authentication.dto.RegistrationDto;
+import dev.hirzel.authentication.dto.UserDto;
 import dev.hirzel.authentication.entity.User;
 import dev.hirzel.authentication.exception.BadRequestException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class RegistrationService
 	@Autowired
 	SessionService sessionService;
 
-	public AuthenticationResult registerUser(RegistrationInfo info)
+	public UserDto register(RegistrationDto info, HttpServletResponse response)
 	{
 		// TODO: Validate RegistrationDto
 		if (info.getUsername() == null)
@@ -32,12 +33,17 @@ public class RegistrationService
 		if (info.getLastName() == null)
 			throw new BadRequestException("LastName is required.");
 
+		// TODO: Check for duplicates
+
 		var passwordHash = authenticationService.hashPassword(info.getPassword());
 		var user = new User(info.getUsername(), passwordHash, info.getFirstName(), info.getLastName());
 		var savedUser = userService.createUser(user);
 		var session = sessionService.createSession(savedUser);
-		var result = new AuthenticationResult(user, session);
+		var cookie = sessionService.createSessionCookie(session);
+		var dto = new UserDto(savedUser);
 
-		return result;
+		response.addCookie(cookie);
+
+		return dto;
 	}
 }

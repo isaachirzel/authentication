@@ -4,6 +4,7 @@ import dev.hirzel.authentication.entity.User;
 import dev.hirzel.authentication.exception.UnauthorizedException;
 import dev.hirzel.authentication.security.Session;
 import jakarta.annotation.Nonnull;
+import jakarta.servlet.http.Cookie;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.Hashtable;
 @Service
 public class SessionService
 {
+	private static final String SESSION_TOKEN_KEY = "hirzel_session_token";
 	private static final Hashtable<String, Session> sessions = new Hashtable<>();
 
 	/**
@@ -45,5 +47,16 @@ public class SessionService
 		sessions.put(session.getToken(), session);
 
 		return session;
+	}
+
+	public Cookie createSessionCookie(Session session)
+	{
+		var cookie = new Cookie(SESSION_TOKEN_KEY, session.getToken());
+
+		cookie.setSecure(true);
+		cookie.setHttpOnly(true);
+		cookie.setPath("/");
+
+		return cookie;
 	}
 }

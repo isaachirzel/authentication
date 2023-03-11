@@ -23,11 +23,11 @@ public class AuthenticationService
 		var user = getAuthenticatedUser(info);
 		var session = sessionService.createSession(user);
 		var cookie = sessionService.createSessionCookie(session);
-		var dto = new UserDto(user);
+		var result = new UserDto(user);
 
 		response.addCookie(cookie);
 
-		return dto;
+		return result;
 	}
 
 	public User getAuthenticatedUser(AuthenticationDto info) throws UnauthorizedException

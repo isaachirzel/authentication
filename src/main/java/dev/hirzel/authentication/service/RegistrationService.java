@@ -40,10 +40,10 @@ public class RegistrationService
 		var savedUser = userService.createUser(user);
 		var session = sessionService.createSession(savedUser);
 		var cookie = sessionService.createSessionCookie(session);
-		var dto = new UserDto(savedUser);
+		var result = new UserDto(savedUser);
 
 		response.addCookie(cookie);
 
-		return dto;
+		return result;
 	}
 }

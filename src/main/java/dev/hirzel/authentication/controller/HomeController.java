@@ -3,6 +3,7 @@ package dev.hirzel.authentication.controller;
 import dev.hirzel.authentication.dto.AuthenticationDto;
 import dev.hirzel.authentication.dto.RegistrationDto;
 import dev.hirzel.authentication.dto.UserDto;
+import dev.hirzel.authentication.dto.VerificationDto;
 import dev.hirzel.authentication.service.AuthenticationService;
 import dev.hirzel.authentication.service.RegistrationService;
 import dev.hirzel.authentication.service.VerificationService;
@@ -28,9 +29,9 @@ public class HomeController
 	}
 
 	@PostMapping("verify")
-	public UserDto verify(@RequestHeader("Authorization") String token)
+	public UserDto verify(VerificationDto dto)
 	{
-		return verificationService.verify(token);
+		return verificationService.verify(dto);
 	}
 
 	@PostMapping("register")
